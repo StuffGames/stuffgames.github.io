@@ -1,0 +1,41 @@
+/* Color Pallettes: */
+/*
+--gunmetal: #403f4cff;
+--dusty-denim: #6290c3ff;
+--champagne-mist: #f3dfc1ff;
+--rosy-copper: #bf4e30ff;
+--shamrock: #4f9d69ff;
+ */
+
+html {
+    color: #F8EDDD; /* 2 shades lower thank champagne-mist */
+    background-color: #26262C; /* 2 shades lower than gunmetal */
+}
+.links-temp {
+    color: inherit;
+    transition: all 0.25s ease-in-out;
+}
+.links-temp:hover {
+    color: #6290C3;
+}
+
+.source-code-pro {
+  font-family: "Source Code Pro", monospace;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.stack-sans-text {
+  font-family: "Stack Sans Text", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.merriweather-sans {
+  font-family: "Merriweather Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: normal;
+}
