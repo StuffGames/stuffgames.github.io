@@ -2,7 +2,15 @@ main {
     margin: 10px 25%;
 }
 
-.nav-links a{
+.nav-links ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+.nav-links li {
+    display: inline-block;
+}
+.nav-links a {
     text-decoration: none;
 }
 .nav-links a:hover {
