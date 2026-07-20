@@ -47,6 +47,7 @@ a:hover {
 .special-marker {
   opacity: 10%;
   text-align: center;
+  margin: 10px 0px;
 }
 
 /* Below are just fonts */
