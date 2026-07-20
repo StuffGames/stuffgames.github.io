@@ -11,9 +11,29 @@ html {
     color: #F8EDDD; /* 2 shades lower thank champagne-mist */
     background-color: #26262C; /* 2 shades lower than gunmetal */
 }
+body {
+    display: flex;
+    flex-direction: column;
+    /* min-height: 100vh; */
+}
+main {
+    flex: 1;
+    gap: 10px;
+}
+footer {
+    text-align: center;
+    /* Below is to keep the footer in the center */
+    position: fixed;
+    left: 0;
+    bottom: 1%;
+    width: 100%;
+}
 a {
     color: inherit;
     transition: all 0.25s ease-in-out;
+}
+a:hover {
+  color: #6290C3;
 }
 
 .footer-items {
@@ -24,7 +44,12 @@ a {
 .footer-links:hover {
   color: #bf4e30ff;
 }
+.special-marker {
+  opacity: 10%;
+  text-align: center;
+}
 
+/* Below are just fonts */
 .source-code-pro {
   font-family: "Source Code Pro", monospace;
   font-optical-sizing: auto;

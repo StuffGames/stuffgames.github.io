@@ -1,0 +1,11 @@
+main {
+    margin: 10px 25%;
+}
+
+.nav-links a{
+    text-decoration: none;
+}
+.nav-links a:hover {
+    color: #4f9d69ff;
+    text-decoration: underline;
+}
