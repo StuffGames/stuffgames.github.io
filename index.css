@@ -36,6 +36,7 @@ a:hover {
   color: #6290C3;
 }
 
+/* TODO: Add a background to footer (that fades hopefully) so it doesn't overlap with other text */
 .footer-items {
   display: flex;
   justify-content: center;
