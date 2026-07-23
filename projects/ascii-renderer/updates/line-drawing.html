@@ -41,7 +41,33 @@
                 link to pr or commit or something like that
             </h3>
             <section>
-                Here is the section where I write what I did.
+                <p>
+                    I decided to take a little detour during this project to try out a line drawing exercise.
+                </p>
+                <p>
+                    I saw this video by this guy that went over fundamental graphics math in a very simple way. Basically he just went over the projection equation
+                    but used that and a line drawing API to create wireframes of spinning cubes by connecting vertices with lines.
+                </p>
+                <p>
+                    I thought it was interesting, so I wanted to try the same thing to drill down how the math works in my head and how it gets put into code.
+                    But the only problem was that I was doing all this from scratch and had no easy way to rasterize lines connected by two points.
+                </p>
+                <p>
+                    My initial thoughts were to create a sorta complicated algorithm that would iterate from one point to another and check the slope at each step
+                    and use that to dictace what kind of character to draw ( \, /, |, etc... ). Eventually I just gave up and decided to look at what the common
+                    solution/method was for drawing lines which led me right to the <strong>Bresenham Line Drawing Algorithm</strong>.
+                </p>
+                <h4>The Algorithm</h4>
+                <p>Fill our the rest and a little story here...</p>
+                <h4>Resources</h4>
+                <ul>
+                    <li>
+                        <a>something here</a>
+                    </li>
+                    <li>
+                        <a>something else here</a>
+                    </li>
+                </ul>
             </section>
             <div class="special-marker">
                 //;
