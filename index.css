@@ -23,10 +23,12 @@ main {
 }
 footer {
     text-align: center;
+    background-color: #26262C;
+    padding: 1% 0;
     /* Below is to keep the footer in the center */
     position: fixed;
     left: 0;
-    bottom: 1%;
+    bottom: 0;
     width: 100%;
 }
 a {
@@ -98,6 +100,12 @@ a:hover {
 
 .bungee-regular {
   font-family: "Bungee", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.stix-two-math-regular {
+  font-family: "STIX Two Math", serif;
   font-weight: 400;
   font-style: normal;
 }

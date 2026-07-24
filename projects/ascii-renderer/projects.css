@@ -18,3 +18,25 @@ main {
     color: #4f9d69ff;
     text-decoration: underline;
 }
+
+/* .code-block {} */
+
+math {
+    background-color: #373743;
+    padding: 2px 5px;
+    border-radius: 5px;
+
+    /* Consider this font lol */
+    /* font-family: "STIX Two Math", serif;
+    font-weight: 400;
+    font-style: normal; */
+}
+.math-block {
+    display: block;
+    font-size: 150%;
+    width: max-content;
+    background-color: #4B4A59;
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 10px;
+}

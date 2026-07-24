@@ -8,7 +8,7 @@
         <!-- Font Stuff -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Merriweather+Sans:ital,wght@0,300..800;1,300..800&family=Momo+Trust+Display&family=Sono:wght,MONO@200..800,1&family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&family=Stack+Sans+Text:wght@200..700&family=Varela+Round&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Merriweather+Sans:ital,wght@0,300..800;1,300..800&family=Momo+Trust+Display&family=STIX+Two+Math&family=Sono:wght,MONO@200..800,1&family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&family=Stack+Sans+Text:wght@200..700&family=Varela+Round&display=swap" rel="stylesheet">
     </head>
     <body class="varela-round-regular">
         <header class="nav-links">
@@ -57,15 +57,73 @@
                     and use that to dictace what kind of character to draw ( \, /, |, etc... ). Eventually I just gave up and decided to look at what the common
                     solution/method was for drawing lines which led me right to the <strong>Bresenham Line Drawing Algorithm</strong>.
                 </p>
+                <p>
+                    So I had an initial alright guess on the algorithm after looking at the solution. But turns out it is much more simple than I had first thought.
+                </p>
+                <h4>Discussing Lines</h4>
+                <p>
+                    We can start with the concept of lines. We can define a line segment as a line that has two endpoints: <math>p1(x1, y1)</math> and <math>p2(x2, y2)</math>.
+                    We can also define a non-terminating line using two points which describes its direction/slope. I start with line segments because it helps describe the
+                    slope better and also helps represent vertices and edges.
+                </p>
+                <p>
+                    For example, we can create a line on a cartesian 2D coordinate system using the points <math>p1=(2, 3)</math> and <math>p2=(5, 8)</math>. We order them as
+                    <math>p1</math> and <math>p2</math> to decide which direction (up or down the slope) we want to read the line and also helps with equations.
+                </p>
+                <p>
+                    ** INSERT IMAGE HERE **
+                </p>
+                <p>
+                    The slope defines the angle of the line and can be calculated as rise over run (if you remember from grade school). Rise is the vertical distance (up and down)
+                    of the line from <math>p1</math> to <math>p2</math> and run is the horizontal distance (left to right) between those same points.
+                </p>
+                <p>
+                    So mathematically we can define the slope as
+                </p>
+                <math class="math-block">
+                    <mi>m</mi>
+                    <mo>=</mo> <mfrac><mtext>rise</mtext><mtext>run</mtext></mfrac>
+                    <mo>=</mo> <mfrac><mn>∆y</mn><mn>∆x</mn></mfrac>
+                    <mo>=</mo> <mfrac>
+                        <mrow><msub><mi>y</mi><mn>2</mn></msub><mo>-</mo><msub><mi>y</mi><mn>1</mn></msub></mrow>
+                        <mrow><msub><mi>x</mi><mn>2</mn></msub><mo>-</mo><msub><mi>x</mi><mn>1</mn></msub></mrow>
+                    </mfrac>
+                </math>
+                <p>
+                    Using the line segments from our previous example we can get the line's slope to be:
+                </p>
+                <math class="math-block">
+                    <mi>m</mi>
+                    <mo>=</mo>
+                    <mfrac>
+                        <mrow><msub><mi>y</mi><mn>2</mn></msub><mo>-</mo><msub><mi>y</mi><mn>1</mn></msub></mrow>
+                        <mrow><msub><mi>x</mi><mn>2</mn></msub><mo>-</mo><msub><mi>x</mi><mn>1</mn></msub></mrow>
+                    </mfrac>
+                    <mo>=</mo>
+                    <mfrac>
+                        <mrow><mn>8</mn><mo>-</mo><mn>3</mn></mrow>
+                        <mrow><mn>5</mn><mo>-</mo><mn>2</mn></mrow>
+                    </mfrac>
+                    <mo>=</mo>
+                    <mfrac><mn>5</mn><mn>3</mn></mfrac>
+                    <mo>≈</mo><mn>1.6...</mn>
+                </math>
+                <p>
+                    If we swapped <math>p1</math> and <math>p2</math> so that we did <math>x1 - x2</math> and <math>y1 - y2</math> then we would get the same slop but negative.
+                    This is important because it could mess up our equations if we don't keep track of the sign of these numbers. A lot of times we will only want the positive
+                    value, so we can just take the absolute value and perform the calculation disregarding the order of the points.
+                </p>
                 <h4>The Algorithm</h4>
-                <p>Fill our the rest and a little story here...</p>
                 <h4>Resources</h4>
                 <ul>
                     <li>
-                        <a>something here</a>
+                        <a href="https://haqr.eu/tinyrenderer/bresenham/">Tiny Renderer (explanation of line drawing)</a>
                     </li>
                     <li>
-                        <a>something else here</a>
+                        <a href="https://www.cs.helsinki.fi/group/goa/mallinnus/lines/bresenh.html">Static page of a lecture on line drawing</a>
+                    </li>
+                    <li>
+                        <a href="https://groups.csail.mit.edu/graphics/classes/6.837/F02/lectures/6.837-7_Line.pdf">Lecture Slides on a lesson about line drawing</a>
                     </li>
                 </ul>
             </section>
