@@ -23,8 +23,9 @@ main {
 }
 footer {
     text-align: center;
-    background-color: #26262C;
-    padding: 1% 0;
+    background: linear-gradient(to top, #26262C 50%, transparent);
+    /* background-color: #26262C; */
+    padding: 3% 0 1% 0;
     /* Below is to keep the footer in the center */
     position: fixed;
     left: 0;
@@ -38,8 +39,6 @@ a {
 a:hover {
   color: #6290C3;
 }
-
-/* TODO: Add a background to footer (that fades hopefully) so it doesn't overlap with other text */
 .footer-items {
   display: flex;
   justify-content: center;
