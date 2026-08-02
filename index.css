@@ -23,9 +23,9 @@ main {
 }
 footer {
     text-align: center;
-    background: linear-gradient(to top, #26262C 50%, transparent);
+    background: linear-gradient(to top, #26262C 75%, transparent);
     /* background-color: #26262C; */
-    padding: 3% 0 1% 0;
+    padding: 1% 0 1% 0;
     /* Below is to keep the footer in the center */
     position: fixed;
     left: 0;

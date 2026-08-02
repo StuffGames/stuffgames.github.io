@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <link rel="shortcut icon" type="image/svg" href="../../images/charger_24dp_EAC452_FILL0_wght400_GRAD0_opsz24.svg"/>
+        <link rel="shortcut icon" type="image/svg" href="../../../images/charger_24dp_EAC452_FILL0_wght400_GRAD0_opsz24.svg"/>
         <!-- Styling stuff -->
         <link rel="stylesheet" type="text/css" href="../../../index.css"/>
         <link rel="stylesheet" type="text/css" href="../projects.css"/>
@@ -67,61 +67,152 @@
                 </p>
                 <h2>Discussing Lines</h2>
                 <p>
-                    We can start with the concept of lines. We can define a line segment as a line that has two endpoints: <math>p1(x1, y1)</math> and <math>p2(x2, y2)</math>.
+                    We can start with the concept of lines. We can define a line segment as a line that has two endpoints:
+                        <math>
+                            <mrow>
+                                <msub><mi>p</mi><mn>1</mn></msub>
+                                <ms>(</ms>
+                                <msub><mi>x</mi><mn>1</mn></msub>
+                                <mo>,</mo>
+                                <msub><mi>y</mi><mn>1</mn></msub>
+                                <ms>)</ms>
+                            </mrow>
+                        </math>
+                        and
+                        <math>
+                            <mrow>
+                                <msub><mi>p</mi><mn>2</mn></msub>
+                                <ms>(</ms>
+                                <msub><mi>x</mi><mn>2</mn></msub>
+                                <mo>,</mo>
+                                <msub><mi>y</mi><mn>2</mn></msub>
+                                <ms>)</ms>
+                            </mrow>
+                        </math>.
                     We can also define a non-terminating line using two points which describes its direction/slope. I start with line segments because it helps describe the
                     slope better and also helps represent vertices and edges.
                 </p>
                 <p>
-                    For example, we can create a line on a cartesian 2D coordinate system using the points <math>p1=(2, 3)</math> and <math>p2=(5, 8)</math>. We order them as
-                    <math>p1</math> and <math>p2</math> to decide which direction (up or down the slope) we want to read the line and also helps with equations.
+                    For example, we can create a line on a cartesian 2D coordinate system using the points
+                    <math>
+                        <mrow>
+                            <msub><mi>p</mi><mn>1</mn></msub>
+                            <mo>=</mo>
+                            <ms>(</ms>
+                            <mn>2</mn>
+                            <mo>,</mo>
+                            <mn>3</mn>
+                            <ms>)</ms>
+                        </mrow>
+                    </math>
+                    and
+                    <math>
+                        <mrow>
+                            <msub><mi>p</mi><mn>2</mn></msub>
+                            <mo>=</mo>
+                            <ms>(</ms>
+                            <mn>5</mn>
+                            <mo>,</mo>
+                            <mn>8</mn>
+                            <ms>)</ms>
+                        </mrow>
+                    </math>. We order them as
+                    <math><mrow><msub><mi>p</mi><mn>1</mn></msub></mrow></math>
+                    and
+                    <math><mrow><msub><mi>p</mi><mn>2</mn></msub></mrow></math> to decide which direction (up or down the slope) we want to read the line and also helps with equations.
                 </p>
                 <img src="images/line-graph.png" />
                 <p>
                     The slope defines the angle of the line and can be calculated as rise over run (if you remember from grade school). Rise is the vertical distance (up and down)
-                    of the line from <math>p1</math> to <math>p2</math> and run is the horizontal distance (left to right) between those same points.
+                    of the line from <math><mrow><msub><mi>p</mi><mn>1</mn></msub></mrow></math> to
+                    <math><mrow><msub><mi>p</mi><mn>2</mn></msub></mrow></math> and run is the horizontal distance (left to right) between those same points.
                 </p>
                 <p>
                     So mathematically we can define the slope as
                 </p>
                 <math class="math-block">
-                    <mi>m</mi>
-                    <mo>=</mo> <mfrac><mtext>rise</mtext><mtext>run</mtext></mfrac>
-                    <mo>=</mo> <mfrac><mn>∆y</mn><mn>∆x</mn></mfrac>
-                    <mo>=</mo> <mfrac>
-                        <mrow><msub><mi>y</mi><mn>2</mn></msub><mo>-</mo><msub><mi>y</mi><mn>1</mn></msub></mrow>
-                        <mrow><msub><mi>x</mi><mn>2</mn></msub><mo>-</mo><msub><mi>x</mi><mn>1</mn></msub></mrow>
-                    </mfrac>
+                    <mrow>
+                        <mi>m</mi>
+                        <mo>=</mo> <mfrac><mtext>rise</mtext><mtext>run</mtext></mfrac>
+                        <mo>=</mo> <mfrac><mn>∆y</mn><mn>∆x</mn></mfrac>
+                        <mo>=</mo> <mfrac>
+                            <mrow><msub><mi>y</mi><mn>2</mn></msub><mo>-</mo><msub><mi>y</mi><mn>1</mn></msub></mrow>
+                            <mrow><msub><mi>x</mi><mn>2</mn></msub><mo>-</mo><msub><mi>x</mi><mn>1</mn></msub></mrow>
+                        </mfrac>
+                    </mrow>
                 </math>
                 <p>
                     Using the line segments from our previous example we can get the line's slope to be:
                 </p>
                 <math class="math-block">
-                    <mi>m</mi>
-                    <mo>=</mo>
-                    <mfrac>
-                        <mrow><msub><mi>y</mi><mn>2</mn></msub><mo>-</mo><msub><mi>y</mi><mn>1</mn></msub></mrow>
-                        <mrow><msub><mi>x</mi><mn>2</mn></msub><mo>-</mo><msub><mi>x</mi><mn>1</mn></msub></mrow>
-                    </mfrac>
-                    <mo>=</mo>
-                    <mfrac>
-                        <mrow><mn>8</mn><mo>-</mo><mn>3</mn></mrow>
-                        <mrow><mn>5</mn><mo>-</mo><mn>2</mn></mrow>
-                    </mfrac>
-                    <mo>=</mo>
-                    <mfrac><mn>5</mn><mn>3</mn></mfrac>
-                    <mo>≈</mo><mn>1.6...</mn>
+                    <mrow>
+                        <mi>m</mi>
+                        <mo>=</mo>
+                        <mfrac>
+                            <mrow><msub><mi>y</mi><mn>2</mn></msub><mo>-</mo><msub><mi>y</mi><mn>1</mn></msub></mrow>
+                            <mrow><msub><mi>x</mi><mn>2</mn></msub><mo>-</mo><msub><mi>x</mi><mn>1</mn></msub></mrow>
+                        </mfrac>
+                        <mo>=</mo>
+                        <mfrac>
+                            <mrow><mn>8</mn><mo>-</mo><mn>3</mn></mrow>
+                            <mrow><mn>5</mn><mo>-</mo><mn>2</mn></mrow>
+                        </mfrac>
+                        <mo>=</mo>
+                        <mfrac><mn>5</mn><mn>3</mn></mfrac>
+                        <mo>≈</mo><mn>1.6...</mn>
+                    </mrow>
                 </math>
                 <div class="note-block">
                     <div style="font-weight: bold; color: white; text-align: center; margin: 0px 0px 10px 0px;">Note:</div>
-                    If we swapped <math class="note-math">p1</math> and <math class="note-math">p2</math> so that we did
-                    <math class="note-math">x1 - x2</math> and <math class="note-math">y1 - y2</math> then we would get the same slope but negative.
+                    If we swapped <math class="note-math"><mrow><msub><mi>p</mi><mn>1</mn></msub></mrow></math> and
+                    <math class="note-math"><mrow><msub><mi>p</mi><mn>2</mn></msub></mrow></math> so that we did
+                    <math class="note-math">
+                        <mrow>
+                            <msub><mi>x</mi><mn>1</mn></msub>
+                            <mo>-</mo>
+                            <msub><mi>x</mi><mn>2</mn></msub>
+                        </mrow>
+                    </math> and
+                    <math class="note-math">
+                        <mrow>
+                            <msub><mi>y</mi><mn>1</mn></msub>
+                            <mo>-</mo>
+                            <msub><mi>y</mi><mn>2</mn></msub>
+                        </mrow>
+                    </math> then we would get the same slope but negative.
                     This is important because it could mess up our equations if we don't keep track of the sign of these numbers. A lot of times we will only want the positive
                     value, so we can just take the absolute value and perform the calculation disregarding the order of the points.
                 </div>
                 <p>
                     Another useful property of the slope is that it describes the ratio of vertical change (∆y) by the horizontal change (∆x). This means that for every single
-                    unit we move in the x axis along the line, the y value changes by m. So if we were at <math>(x=2, y=3)</math> and change x by 1, then y would change by
-                    <math>m=5/3</math> and the new point on the line would be <math>(x=3, y=14/3)</math>. (This topic becomes important later).
+                    unit we move in the x axis along the line, the y value changes by m. So if we were at
+                    <math>
+                        <mrow>
+                            <ms>(</ms>
+                                <mi>x</mi><mo>=</mo><mn>2</mn>
+                                <mo>,</mo>
+                                <mi>y</mi><mo>=</mo><mn>3</mn>
+                            <ms>)</ms>
+                        </mrow>
+                    </math> and change x by 1, then y would change by
+                    <math>
+                        <mrow>
+                            <mi>m</mi>
+                            <mo>=</mo>
+                            <mn>5</mn><mo>/</mo><mn>3</mn>
+                            <!-- <mfrac><mn>5</mn><mn>3</mn></mfrac> -->
+                        </mrow>
+                        m=5/3
+                    </math> and the new point on the line would be
+                    <math>
+                      <mrow>
+                            <ms>(</ms>
+                                <mi>x</mi><mo>=</mo><mn>3</mn>
+                                <mo>,</mo>
+                                <mi>y</mi><mo>=</mo><mn>14</mn><mo>/</mo><mn>3</mn>
+                            <ms>)</ms>
+                        </mrow>
+                    </math>. (This topic becomes important later).
                 </p>
                 <math class="math-block">
                     <mtable>
