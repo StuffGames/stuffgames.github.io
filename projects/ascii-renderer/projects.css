@@ -2,6 +2,11 @@ main {
     margin: 10px 25%;
     padding: 5% 0% 0% 0%;
 }
+img {
+    margin: 10px auto;
+    max-width: 50%;
+    height: auto;
+}
 
 .nav-links ul {
     list-style: none;

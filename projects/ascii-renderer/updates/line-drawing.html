@@ -60,7 +60,7 @@
                 <p>
                     So I had an initial alright guess on the algorithm after looking at the solution. But turns out it is much more simple than I had first thought.
                 </p>
-                <h4>Discussing Lines</h4>
+                <h2>Discussing Lines</h2>
                 <p>
                     We can start with the concept of lines. We can define a line segment as a line that has two endpoints: <math>p1(x1, y1)</math> and <math>p2(x2, y2)</math>.
                     We can also define a non-terminating line using two points which describes its direction/slope. I start with line segments because it helps describe the
@@ -70,9 +70,7 @@
                     For example, we can create a line on a cartesian 2D coordinate system using the points <math>p1=(2, 3)</math> and <math>p2=(5, 8)</math>. We order them as
                     <math>p1</math> and <math>p2</math> to decide which direction (up or down the slope) we want to read the line and also helps with equations.
                 </p>
-                <p>
-                    ** INSERT IMAGE HERE **
-                </p>
+                <img src="images/line-graph.png" />
                 <p>
                     The slope defines the angle of the line and can be calculated as rise over run (if you remember from grade school). Rise is the vertical distance (up and down)
                     of the line from <math>p1</math> to <math>p2</math> and run is the horizontal distance (left to right) between those same points.
@@ -109,12 +107,12 @@
                     <mo>≈</mo><mn>1.6...</mn>
                 </math>
                 <p>
-                    If we swapped <math>p1</math> and <math>p2</math> so that we did <math>x1 - x2</math> and <math>y1 - y2</math> then we would get the same slop but negative.
+                    If we swapped <math>p1</math> and <math>p2</math> so that we did <math>x1 - x2</math> and <math>y1 - y2</math> then we would get the same slope but negative.
                     This is important because it could mess up our equations if we don't keep track of the sign of these numbers. A lot of times we will only want the positive
                     value, so we can just take the absolute value and perform the calculation disregarding the order of the points.
                 </p>
-                <h4>The Algorithm</h4>
-                <h4>Resources</h4>
+                <h2>The Algorithm</h2>
+                <h2>Resources</h2>
                 <ul>
                     <li>
                         <a href="https://haqr.eu/tinyrenderer/bresenham/">Tiny Renderer (explanation of line drawing)</a>
