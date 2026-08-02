@@ -37,6 +37,7 @@ math {
     font-style: normal; */
 }
 .math-block {
+    text-align: center;
     display: block;
     font-size: 150%;
     width: max-content;
@@ -44,4 +45,16 @@ math {
     margin: 20px auto;
     padding: 20px;
     border-radius: 10px;
+}
+
+.note-math {
+    background-color: #f3dfc1ff;
+}
+.note-block {
+    font-size: 90%;
+    margin: auto 10%;
+    color: #403f4cff;
+    background-color: #6290c3ff;
+    border-radius: 24px;
+    padding: 20px;
 }
