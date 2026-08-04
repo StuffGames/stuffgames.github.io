@@ -1,6 +1,8 @@
 main {
-    margin: 10px 25%;
-    padding: 5% 0% 0% 0%;
+    /* margin: 10px 25%; */
+    margin: 10px auto;
+    max-width: 50rem;
+    padding: 5% 2% 0% 2%;
 }
 img {
     margin: 10px auto;
@@ -32,9 +34,9 @@ math {
     border-radius: 5px;
 
     /* Consider this font lol */
-    /* font-family: "STIX Two Math", serif;
+    font-family: "STIX Two Math", serif;
     font-weight: 400;
-    font-style: normal; */
+    font-style: normal;
 }
 .math-block {
     text-align: center;
