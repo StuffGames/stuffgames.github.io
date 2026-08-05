@@ -9,6 +9,12 @@ img {
     max-width: 50%;
     height: auto;
 }
+ul {
+    list-style-type: none;
+}
+li {
+    margin-top: 10px;
+}
 
 .nav-links ul {
     list-style: none;
