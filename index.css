@@ -26,9 +26,9 @@ footer {
   padding: 1% 0 1% 0;
   /* Below is to keep the footer in the center */
   /* position: fixed;
-  left: 0;
-  bottom: 0;
-  width: 100%; */
+  left: 0; */
+  /* bottom: 0; */
+  /* width: 100%; */
 }
 a {
   color: inherit;
@@ -47,6 +47,14 @@ img {
 }
 img:hover {
   box-shadow: 0 0 2px 1px #8C6118;
+}
+code {
+  background-color: black;
+  border-radius: 6px;
+  padding: 2px 5px;
+  font-size: 0.8rem;
+  color: #f3dfc1ff;
+  font-family: 'Source Code Pro','Courier New', Courier, monospace;
 }
 
 .footer-items {

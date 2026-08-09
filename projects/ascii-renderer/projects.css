@@ -32,7 +32,18 @@ li {
     text-decoration: underline;
 }
 
-/* .code-block {} */
+.code-block {
+    padding: 5px 15px;
+    background-color: black;
+    border-radius: 24px;
+    border-left: 4px solid #4f9d69ff;
+    margin: auto 5%;
+    overflow-x: auto;
+}
+.code-block code {
+    padding: 0;
+    background-color: transparent;
+}
 
 math {
     background-color: #373743;
@@ -56,13 +67,14 @@ math {
 }
 
 .note-math {
-    background-color: #f3dfc1ff;
+    /* background-color: #f3dfc1ff; */
 }
 .note-block {
     font-size: 90%;
     margin: auto 10%;
-    color: #403f4cff;
-    background-color: #6290c3ff;
+    /* color: #403f4cff; */
+    background-color: #2d3748;
+    border-left: 4px solid #6290c3ff;
     border-radius: 24px;
     padding: 20px;
 }
