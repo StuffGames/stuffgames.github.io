@@ -232,9 +232,12 @@
                     </mtable>
                 </math>
                 <h2>The Algorithm</h2>
-                <p>TODO: add Previous line here</p>
                 <p>
-                    Now let's utilize the previous example of points (<math><mrow><msub><mi>p</mi><mn>1</mn></msub></mrow></math> and <math><mrow><msub><mi>p</mi><mn>2</mn></msub></mrow></math>)
+                    Now normally we would need points in world space to be projected onto the image frame and all of that jazz. We will just assume that any points (like vertices) are already
+                    mapped onto pixels on the image frame and all we need to do is connect the points with a line and rasterize it into pixels.
+                </p>
+                <p>
+                    Let's utilize the previous example of points (<math><mrow><msub><mi>p</mi><mn>1</mn></msub></mrow></math> and <math><mrow><msub><mi>p</mi><mn>2</mn></msub></mrow></math>)
                     to derive the algorithm to trace a line and rasterize it, fill it in the buffer, and render it to the viewport.
                 </p>
                 <p>
