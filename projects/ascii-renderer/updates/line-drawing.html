@@ -32,7 +32,7 @@
         </header>
         <main>
             <h1 class="momo-trust-display-regular">
-                Bresenham Line Drawing
+                Bresenham Line Drawing (incomplete)
             </h1>
             <h2>
                 July 13, 2026
@@ -488,7 +488,7 @@ function drawLine():
         x++
 </code>
 </pre>
-                <p>Awesome, that was the long part out of the way. With that solved and handled for, we can move onto our last concern.</p>
+                <p>Awesome, that's that part out of the way. With that solved and handled for, we can move onto our last concern.</p>
                 <h3>Utilizing Integer Arithmetic</h3>
                 <p>
                     Calculating with floating point numbers isn't exactly the biggest performance overhead that it used to be on older systems
@@ -590,14 +590,16 @@ function drawLine():
         if (isSteep):
             // Instead of performing operations to transpose the coordinate back,
             // We can just color the pixel with the coordinates swapped (in place transpose)
-            colorPixel(round(y), x)
+            colorPixel(y, x)
         else:
-            colorPixel(x, round(y)) // pretend this is a function that colors the current pixel
+            colorPixel(x, y) // pretend this is a function that colors the current pixel
         
         // Error accumulates by slope at every step
         // If it surpasses 0.5, we increase the y value and decrease error to compensate
         if (error + m > 0.5):
-            y++
+            // We do a conditional check here to make sure we increase or decrease y
+            // depending on if the line is going up or down
+            y = (p2.y > p1.y) ? 1 : -1
             error -= 1
         error = error + m
         x++
@@ -612,14 +614,14 @@ function drawLine():
                 </p>
 <pre class="code-block">
 <code>
-...
+    ...
         else:
-            colorPixel(x, round(y)) // pretend this is a function that colors the current pixel
+            colorPixel(x, y) // pretend this is a function that colors the current pixel
         
         // Accumulate error and compare using updated value
         error += m
         if (error > 0.5):
-            y++
+            y = (p2.y > p1.y) ? 1 : -1
             error -= 1
         x++
 </code>
@@ -682,8 +684,237 @@ function drawLine():
                         </mtr>
                     </mtable>
                 </math>
-                <p>Something something, it is almost there idk, im tired...</p>
-                <p>TODO: finish, add pictures, add styling for hover over code ?</p>
+                <p>
+                    There we go. Now we have it broken down into a nicer integer form which we can implement into code pretty easily.
+                    One thing to note is that in place of the slope term (<math><mi>m</mi></math>), we introduce two new terms:
+                    <math><mrow><ms>∆</ms><mi>x</mi></mrow></math> and <math><mrow><ms>∆</ms><mi>y</mi></mrow></math>. So we will have
+                    to initialize these in the code, which is pretty simple (
+                        <math>
+                            <mrow>
+                                <ms>∆</ms><mi>x</mi><mo>=</mo><msub><mi>x</mi><mn>2</mn></msub><mo>-</mo><msub><mi>x</mi><mn>1</mn></msub>
+                            </mrow>
+                        </math>
+                    , etc.). Now let's rearrange the way we update our terms:
+                </p>
+                <math class="math-block">
+                    <mtable>
+                        <mtr>
+                            <mtd>
+                                <mi>e</mi><mo>=</mo><mi>e</mi><mo>+</mo></msub><mi>m</mi>
+                            </mtd>
+                        </mtr>
+                        <mtr>
+                            <mtd>
+                                <mi>e</mi><mo>=</mo><mi>e</mi><mo>+</mo>
+                                <mfrac>
+                                    <mrow><ms>∆</ms><mi>y</mi></mrow>
+                                    <mrow><ms>∆</ms><mi>x</mi></mrow>
+                                </mfrac>
+                            </mtd>
+                        </mtr>
+                        <mtr>
+                            <mtd>
+                                <mo>(</mo><ms>∆</ms><mi>x</mi><mo>)</mo>
+                                <mi>e</mi><mo>=</mo>
+                                <mo>(</mo><mi>e</mi><mo>+</mo>
+                                <mfrac>
+                                    <mrow><ms>∆</ms><mi>y</mi></mrow>
+                                    <mrow><ms>∆</ms><mi>x</mi></mrow>
+                                </mfrac>
+                                <mo>)</mo>
+                                <mo>(</mo><ms>∆</ms><mi>x</mi><mo>)</mo>
+                            </mtd>
+                        </mtr>
+                        <mtr>
+                            <mtd>
+                                <mi>e</mi>
+                                <ms>∆</ms><mi>x</mi>
+                                <mo>=</mo>
+                                <mi>e</mi>
+                                <ms>∆</ms><mi>x</mi>
+                                <mo>+</mo>
+                                <ms>∆</ms><mi>y</mi>
+                            </mtd>
+                        </mtr>
+                    </mtable>
+                </math>
+                <p>
+                    Now let's do the updating when we re-normalize the error term (i.e. <code>error -= 1</code>):
+                </p>
+                <math class="math-block">
+                    <mtable>
+                        <mtr>
+                            <mtd>
+                                <mi>e</mi><mo>=</mo><mi>e</mi><mo>-</mo></msub><mn>1</mn>
+                            </mtd>
+                        </mtr>
+                        <mtr>
+                            <mtd>
+                                <mo>(</mo><ms>∆</ms><mi>x</mi><mo>)</mo>
+                                <mi>e</mi><mo>=</mo>
+                                <mo>(</mo><mi>e</mi><mo>-</mo><mn>1</mn>
+                                <mo>)</mo>
+                                <mo>(</mo><ms>∆</ms><mi>x</mi><mo>)</mo>
+                            </mtd>
+                        </mtr>
+                        <mtr>
+                            <mtd>
+                                <mi>e</mi>
+                                <ms>∆</ms><mi>x</mi>
+                                <mo>=</mo>
+                                <mi>e</mi>
+                                <ms>∆</ms><mi>x</mi>
+                                <mo>-</mo>
+                                <ms>∆</ms><mi>x</mi>
+                            </mtd>
+                        </mtr>
+                    </mtable>
+                </math>
+                <p>
+                    Perfect! Basically we are multiplying both sides by our <math><ms>∆</ms><mi>x</mi></math> term to align with the previous updating method.
+                    As you can tell we are bringing the <math><ms>∆</ms><mi>x</mi></math> and <math><ms>∆</ms><mi>y</mi></math> into the way we update terms as well.
+                    Therefore, we can reuse the previous <code>changeX</code> and <code>changeY</code> as well. Here is the code:
+                </p>
+<pre class="code-block">
+<code>
+function drawLine():
+    p1 = (2, 3)
+    p2 = (5, 8)
+    x = p1.x, y = p1.y
+
+    // We evaluate error as an integer now
+    error = 0
+    // Split m into changeX and changeY
+    changeX = abs(p2.x - p1.x)
+    changeY = abs(p2.y - p1.y)
+
+    isSteep = abs(p2.y - p1.y) > abs(p2.x - p1.x)
+
+    // Transpose x and y coordinates of points if line is steep
+    if (isSteep) {
+        tempP2X = p2.x
+        tempP1X = p1.x
+
+        p2.x = p2.y
+        p1.x = p1.y
+
+        p2.y = tempP2X
+        p1.y = tempP1X
+    }
+
+    // Swap starting and end points when start is to the right of end point
+    if (p1.x > p2.x):
+        temp = p1
+        p1 = p2
+        p2 = temp
+    
+    while (x <= p2.x):
+        if (isSteep):
+            // Instead of performing operations to transpose the coordinate back,
+            // We can just color the pixel with the coordinates swapped (in place transpose)
+            colorPixel(y, x)
+        else:
+            colorPixel(x, y) // pretend this is a function that colors the current pixel
+        
+        // Accumulate error and compare using updated value
+        error += changeY
+        if (2 * e > changeX):
+            y = (p2.y > p1.y) ? 1 : -1
+            error -= changeX
+        x++
+</code>
+</pre>
+                <p>
+                    In the code, you can notice that we only keep track of <code>error</code> but do not multiply it with <code>changeX</code> like how we derived in the math.
+                    This is because we are starting the error term at 0 (zeroes out the <code>changeX</code> term) and only increase by <code>changeY</code>.
+                    Thankfully this helps simplify the code without needing to multiply or include more terms.
+                </p>
+                <p>
+                    Anyways, that is it. We have the final algorithm that handles all angles of lines and properly renders them in a rasterized grid. I found this exercise very
+                    fun and helped me dig my hands deep into the math and the way lines are drawn. I think this exercise gave me a nice fundamental understanding of graphics and
+                    the kinds of tricks used to draw things to the screen.
+                </p>
+                <p>
+                    Anyways, I'm providing my completed and committed code below written in C and stuff.
+                </p>
+<pre class="code-block">
+    <code>
+// Draws a line by rasterizing the continuous line segment into discrete characters.
+// At the moment, it only produces a point at each cell (depending on the implementation of drawPoint())
+void drawLine(Vector2* start, Vector2* end, Canvas* canvas) {
+    int startX = (int) start->x;
+    int startY = (int) start->y;
+
+    int endX = (int) end->x;
+    int endY = (int) end->y;
+
+    // Check if the start or end are out of bounds
+    if ((startX < 0 || startY < 0)
+        || (startX > canvas->WIDTH || startY > canvas->HEIGHT)) {
+        printf("Starting point: { %f, %f } is out of bounds of canvas\n", start->x, start->y);
+        exit(1);
+    }
+
+    if ((endX < 0 || endY < 0)
+        || (endX > canvas->WIDTH || endY > canvas->HEIGHT)) {
+        printf("Ending point: { %f, %f } is out of bounds of canvas\n", end->x, end->y);
+        exit(1);
+    }
+
+    int changeX = abs(startX-endX);
+    int changeY = abs(startY-endY);
+
+    int isSteep = changeX < changeY;
+    if (isSteep) {
+        // Swap X and Y variables to transpose line drawing
+        int tempX = startX;
+        int tempY = endX;
+
+        startX = startY;
+        startY = tempX;
+
+        endX = endY;
+        endY = tempY;
+
+        tempX = changeX;
+        changeY = tempX;
+        changeX = changeY;
+    }
+
+    // If line goes right to left, swap coordinates
+    if (startX > endX) {
+        int temp = startX;
+        startX = endX;
+        endX = temp;
+
+        temp = startY;
+        startY = endY;
+        endY = temp;
+    }
+
+    int x = startX;
+    int y = startY;
+
+    int errorTerm = 0;
+
+    while (x <= endX) {
+        if (isSteep) {
+            drawPoint(y, x, canvas);
+        } else {
+            drawPoint(x, y, canvas);
+        }
+
+        errorTerm += changeY;
+        if (2 * errorTerm > changeX) {
+            y += endY > startY ? 1 : -1; // accounting for y flip
+            errorTerm -= changeX;
+        }
+        x++;
+    }
+}
+    </code>
+</pre>
+                <p><strong>TODO: finish, add pictures</strong></p>
                 <h2>Resources</h2>
                 <ul>
                     <li id="tiny-renderer-line-drawing">

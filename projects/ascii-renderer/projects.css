@@ -64,6 +64,10 @@ math {
     margin: 20px auto;
     padding: 20px;
     border-radius: 10px;
+    transition: all 0.5s ease-in-out;
+}
+.math-block:hover {
+  box-shadow: 0 0 2px 1px #bf4e30ff;
 }
 
 .note-math {
