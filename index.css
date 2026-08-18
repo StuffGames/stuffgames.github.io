@@ -1,4 +1,5 @@
 /* Color Palettes: */
+/* https://coolors.co/26262c-f8eedd-6290c3-bf4e30-4f9d69 */
 /*
 --gunmetal: #403f4cff;
 --dusty-denim: #6290c3ff;
@@ -8,12 +9,52 @@
  */
 
 html {
-    color: #F8EDDD; /* 2 shades lower thank champagne-mist */
-    background-color: #26262C; /* 2 shades lower than gunmetal */
+  color: #F8EDDD; /* 2 shades lower thank champagne-mist */
+  background-color: #26262C; /* 2 shades lower than gunmetal */
+}
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+main {
+  flex: 1;
+  gap: 10px;
+}
+footer {
+  text-align: center;
+  padding: 1% 0 1% 0;
+  /* Below is to keep the footer in the center */
+  /* position: fixed;
+  left: 0; */
+  /* bottom: 0; */
+  /* width: 100%; */
 }
 a {
-    color: inherit;
-    transition: all 0.25s ease-in-out;
+  color: inherit;
+  transition: all 0.25s ease-in-out;
+}
+a:hover {
+  color: #6290C3;
+}
+img {
+  display: block;
+  border-style: solid;
+  border-width: 4px;
+  border-radius: 24px;
+  border-color: #403f4cff;
+  transition: all 0.5s ease-in-out;
+}
+img:hover {
+  box-shadow: 0 0 2px 1px #8C6118;
+}
+code {
+  background-color: black;
+  border-radius: 6px;
+  padding: 2px 5px;
+  font-size: 0.8rem;
+  color: #f3dfc1ff;
+  font-family: 'Source Code Pro','Courier New', Courier, monospace;
 }
 
 .footer-items {
@@ -24,7 +65,13 @@ a {
 .footer-links:hover {
   color: #bf4e30ff;
 }
+.special-marker {
+  opacity: 10%;
+  text-align: center;
+  margin: 10px 0px;
+}
 
+/* Below are just fonts */
 .source-code-pro {
   font-family: "Source Code Pro", monospace;
   font-optical-sizing: auto;
@@ -70,6 +117,12 @@ a {
 
 .bungee-regular {
   font-family: "Bungee", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.stix-two-math-regular {
+  font-family: "STIX Two Math", serif;
   font-weight: 400;
   font-style: normal;
 }

@@ -1,0 +1,84 @@
+main {
+    /* margin: 10px 25%; */
+    margin: 10px auto;
+    max-width: 50rem;
+    padding: 5% 2% 0% 2%;
+}
+img {
+    margin: 10px auto;
+    max-width: 50%;
+    height: auto;
+}
+ul {
+    list-style-type: none;
+}
+li {
+    margin-top: 10px;
+}
+
+.nav-links ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+.nav-links li {
+    display: inline-block;
+}
+.nav-links a {
+    text-decoration: none;
+}
+.nav-links a:hover {
+    color: #4f9d69ff;
+    text-decoration: underline;
+}
+
+.code-block {
+    padding: 5px 15px;
+    background-color: black;
+    border-radius: 24px;
+    border-left: 4px solid #4f9d69ff;
+    margin: auto 5%;
+    overflow-x: auto;
+}
+.code-block code {
+    padding: 0;
+    background-color: transparent;
+}
+
+math {
+    background-color: #373743;
+    padding: 3px 5px;
+    border-radius: 5px;
+
+    /* Consider this font lol */
+    font-family: "STIX Two Math", serif;
+    font-weight: 400;
+    font-style: normal;
+}
+.math-block {
+    text-align: center;
+    display: block;
+    font-size: 150%;
+    width: max-content;
+    background-color: #4B4A59;
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 10px;
+    transition: all 0.5s ease-in-out;
+}
+.math-block:hover {
+  box-shadow: 0 0 2px 1px #bf4e30ff;
+}
+
+.note-math {
+    /* background-color: #f3dfc1ff; */
+}
+.note-block {
+    font-size: 90%;
+    margin: auto 10%;
+    /* color: #403f4cff; */
+    background-color: #2d3748;
+    border-left: 4px solid #6290c3ff;
+    border-radius: 24px;
+    padding: 20px;
+}

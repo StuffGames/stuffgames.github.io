@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <link rel="shortcut icon" type="image/svg" href="../../../images/charger_24dp_EAC452_FILL0_wght400_GRAD0_opsz24.svg"/>
+        <!-- Styling stuff -->
+        <link rel="stylesheet" type="text/css" href="../../../index.css"/>
+        <link rel="stylesheet" type="text/css" href="../projects.css"/>
+        <!-- Font Stuff -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Merriweather+Sans:ital,wght@0,300..800;1,300..800&family=Momo+Trust+Display&family=STIX+Two+Math&family=Sono:wght,MONO@200..800,1&family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&family=Stack+Sans+Text:wght@200..700&family=Varela+Round&display=swap" rel="stylesheet">
+    </head>
+    <body class="varela-round-regular">
+        <header class="nav-links">
+            <nav class="nav-links">
+                <ul>
+                    <li>
+                        <a href="../../../index.html">
+                            Stuff Games
+                        </a>
+                    </li>
+                    /
+                    <li>
+                        <a href="../index.html">ascii-renderer</a>
+                    </li>
+                    /
+                    <li>
+                        Bresenham Line Drawing
+                    </li>
+                </ul>
+            </nav>
+        </header>
+        <main>
+            <h1 class="momo-trust-display-regular">
+                Bresenham Line Drawing (incomplete)
+            </h1>
+            <h2>
+                July 13, 2026
+            </h2>
+            <h3>
+                <a href="https://github.com/StuffGames/ascii-renderer/commit/5cedd6841c1bb2252ad9419f744c50a3c01de7b9">
+                    For some reason decided to do the whole change in one commit
+                </a>
+            </h3>
+            <section>
+                <h2>
+                    Intro
+                </h2>
+                <p>
+                    I decided to take a little detour during this project to try out a line drawing exercise.
+                </p>
+                <p>
+                    I saw this video by this guy that went over fundamental graphics math in a very simple way. Basically he just went over the projection equation
+                    but used that and a line drawing API to create wireframes of spinning cubes by connecting vertices with lines.
+                </p>
+                <p>
+                    I thought it was interesting, so I wanted to try the same thing to drill down how the math works in my head and how it gets put into code.
+                    But the only problem was that I was doing all this from scratch and had no easy way to rasterize lines connected by two points.
+                </p>
+                <p>
+                    My initial thoughts were to create a sorta complicated algorithm that would iterate from one point to another and check the slope at each step
+                    and use that to dictace what kind of character to draw ( \, /, |, etc... ). Eventually I just gave up and decided to look at what the common
+                    solution/method was for drawing lines which led me right to the <strong>Bresenham Line Drawing Algorithm</strong>.
+                </p>
+                <p>
+                    So I had an initial alright guess on the algorithm after looking at the solution. But turns out it is much more simple than I had first thought.
+                </p>
+                <h2>Discussing Lines</h2>
+                <p>
+                    We can start with the concept of lines. We can define a line segment as a line that has two endpoints:
+                        <math>
+                            <mrow>
+                                <msub><mi>p</mi><mn>1</mn></msub>
+                                <ms>(</ms>
+                                <msub><mi>x</mi><mn>1</mn></msub>
+                                <mo>,</mo>
+                                <msub><mi>y</mi><mn>1</mn></msub>
+                                <ms>)</ms>
+                            </mrow>
+                        </math>
+                        and
+                        <math>
+                            <mrow>
+                                <msub><mi>p</mi><mn>2</mn></msub>
+                                <ms>(</ms>
+                                <msub><mi>x</mi><mn>2</mn></msub>
+                                <mo>,</mo>
+                                <msub><mi>y</mi><mn>2</mn></msub>
+                                <ms>)</ms>
+                            </mrow>
+                        </math>.
+                    We can also define a non-terminating line using two points which describes its direction/slope. I start with line segments because it helps describe the
+                    slope better and also helps represent vertices and edges.
+                </p>
+                <p>
+                    For example, we can create a line on a cartesian 2D coordinate system using the points
+                    <math>
+                        <mrow>
+                            <msub><mi>p</mi><mn>1</mn></msub>
+                            <mo>=</mo>
+                            <ms>(</ms>
+                            <mn>2</mn>
+                            <mo>,</mo>
+                            <mn>3</mn>
+                            <ms>)</ms>
+                        </mrow>
+                    </math>
+                    and
+                    <math>
+                        <mrow>
+                            <msub><mi>p</mi><mn>2</mn></msub>
+                            <mo>=</mo>
+                            <ms>(</ms>
+                            <mn>5</mn>
+                            <mo>,</mo>
+                            <mn>8</mn>
+                            <ms>)</ms>
+                        </mrow>
+                    </math>. We order them as
+                    <math><mrow><msub><mi>p</mi><mn>1</mn></msub></mrow></math>
+                    and
+                    <math><mrow><msub><mi>p</mi><mn>2</mn></msub></mrow></math> to decide which direction (up or down the slope) we want to read the line and also helps with equations.
+                </p>
+                <img src="images/line-graph.png" />
+                <p>
+                    The slope defines the angle of the line and can be calculated as rise over run (if you remember from grade school). Rise is the vertical distance (up and down)
+                    of the line from <math><mrow><msub><mi>p</mi><mn>1</mn></msub></mrow></math> to
+                    <math><mrow><msub><mi>p</mi><mn>2</mn></msub></mrow></math> and run is the horizontal distance (left to right) between those same points.
+                </p>
+                <p>
+                    So mathematically we can define the slope as
+                </p>
+                <math class="math-block">
+                    <mrow>
+                        <mi>m</mi>
+                        <mo>=</mo> <mfrac><mtext>rise</mtext><mtext>run</mtext></mfrac>
+                        <mo>=</mo> <mfrac><mn>∆y</mn><mn>∆x</mn></mfrac>
+                        <mo>=</mo> <mfrac>
+                            <mrow><msub><mi>y</mi><mn>2</mn></msub><mo>-</mo><msub><mi>y</mi><mn>1</mn></msub></mrow>
+                            <mrow><msub><mi>x</mi><mn>2</mn></msub><mo>-</mo><msub><mi>x</mi><mn>1</mn></msub></mrow>
+                        </mfrac>
+                    </mrow>
+                </math>
+                <p>
+                    Using the line segments from our previous example we can get the line's slope to be:
+                </p>
+                <math class="math-block">
+                    <mrow>
+                        <mi>m</mi>
+                        <mo>=</mo>
+                        <mfrac>
+                            <mrow><msub><mi>y</mi><mn>2</mn></msub><mo>-</mo><msub><mi>y</mi><mn>1</mn></msub></mrow>
+                            <mrow><msub><mi>x</mi><mn>2</mn></msub><mo>-</mo><msub><mi>x</mi><mn>1</mn></msub></mrow>
+                        </mfrac>
+                        <mo>=</mo>
+                        <mfrac>
+                            <mrow><mn>8</mn><mo>-</mo><mn>3</mn></mrow>
+                            <mrow><mn>5</mn><mo>-</mo><mn>2</mn></mrow>
+                        </mfrac>
+                        <mo>=</mo>
+                        <mfrac><mn>5</mn><mn>3</mn></mfrac>
+                        <mo>≈</mo><mn>1.6...</mn>
+                    </mrow>
+                </math>
+                <div class="note-block">
+                    <div style="font-weight: bold; color: white; text-align: center; margin: 0px 0px 10px 0px;">Note:</div>
+                    If we swapped <math class="note-math"><mrow><msub><mi>p</mi><mn>1</mn></msub></mrow></math> and
+                    <math class="note-math"><mrow><msub><mi>p</mi><mn>2</mn></msub></mrow></math> so that we did
+                    <math class="note-math">
+                        <mrow>
+                            <msub><mi>x</mi><mn>1</mn></msub>
+                            <mo>-</mo>
+                            <msub><mi>x</mi><mn>2</mn></msub>
+                        </mrow>
+                    </math> and
+                    <math class="note-math">
+                        <mrow>
+                            <msub><mi>y</mi><mn>1</mn></msub>
+                            <mo>-</mo>
+                            <msub><mi>y</mi><mn>2</mn></msub>
+                        </mrow>
+                    </math> then we would get the same slope but negative.
+                    This is important because it could mess up our equations if we don't keep track of the sign of these numbers. A lot of times we will only want the positive
+                    value, so we can just take the absolute value and perform the calculation disregarding the order of the points.
+                </div>
+                <p>
+                    Another useful property of the slope is that it describes the ratio of vertical change (∆y) by the horizontal change (∆x). This means that for every single
+                    unit we move in the x axis along the line, the y value changes by m. So if we were at
+                    <math>
+                        <mrow>
+                            <ms>(</ms>
+                                <mi>x</mi><mo>=</mo><mn>2</mn>
+                                <mo>,</mo>
+                                <mi>y</mi><mo>=</mo><mn>3</mn>
+                            <ms>)</ms>
+                        </mrow>
+                    </math> and change x by 1, then y would change by
+                    <math>
+                        <mrow>
+                            <mi>m</mi>
+                            <mo>=</mo>
+                            <mn>5</mn><mo>/</mo><mn>3</mn>
+                            <!-- <mfrac><mn>5</mn><mn>3</mn></mfrac> -->
+                        </mrow>
+                    </math> and the new point on the line would be
+                    <math>
+                      <mrow>
+                            <ms>(</ms>
+                                <mi>x</mi><mo>=</mo><mn>3</mn>
+                                <mo>,</mo>
+                                <mi>y</mi><mo>=</mo><mn>14</mn><mo>/</mo><mn>3</mn>
+                            <ms>)</ms>
+                        </mrow>
+                    </math>. (This topic becomes important for the algorithm).
+                </p>
+                <math class="math-block">
+                    <mtable>
+                        <mtr>
+                            <mtd>
+                                <mi>x</mi><mo>+</mo><mn>1</mn><mo>=</mo><mn>2</mn><mo>+</mo><mn>1</mn><mo>=</mo><mn>3</mn>
+                            </mtd>
+                        </mtr>
+                        <mtr>
+                            <mtd>
+                                <mi>y</mi><mo>+</mo><mi>m</mi><mo>=</mo><mn>3</mn><mo>+</mo>
+                                <mfrac><mn>5</mn><mn>3</mn></mfrac>
+                                <mo>=</mo>
+                                <mfrac><mn>14</mn><mn>3</mn></mfrac>
+                                <mo>≈</mo><mn>4.6...</mn>
+                            </mtd>
+                        </mtr>
+                    </mtable>
+                </math>
+                <h2>The Algorithm</h2>
+                <p>
+                    Now normally we would need points in world space to be projected onto the image frame and all of that jazz. We will just assume that any points (like vertices) are already
+                    mapped onto pixels on the image frame and all we need to do is connect the points with a line and rasterize it into pixels.
+                </p>
+                <p>
+                    Let's utilize the previous example of points (<math><mrow><msub><mi>p</mi><mn>1</mn></msub></mrow></math> and <math><mrow><msub><mi>p</mi><mn>2</mn></msub></mrow></math>)
+                    to derive the algorithm to trace a line and rasterize it, fill it in the buffer, and render it to the viewport.
+                </p>
+                <p>
+                    Luckily for this algorithm (like many others such as raytracing), we do not need knowledge of the resolution of the canvas to draw the line.
+                    We can start by trying to traverse pixels starting from one point to another. Beginning with the coordinates:
+                    <math>
+                        <mrow>
+                            <msub><mi>p</mi><mn>1</mn></msub>
+                            <mo>=</mo>
+                            <ms>(</ms><mn>2</mn><mo>,</mo><mn>3</mn><ms>)</ms>
+                        </mrow>
+                    </math>, we can calculate the slope (1.6... from the previous section) and start traversing, using pixels as our units.
+                </p>
+                <p>
+                    First, color the current pixel then, move one unit to the right. Since slope is a ratio of change in x and change y, we can move up
+                    <math><mrow><mi>m</mi></mrow></math> units
+                    (<math><mrow><mn>3</mn><mo>+</mo><mn>1.6...</mn><mo>=</mo><mn>4.6...</mn></mrow></math>). But pixels are whole numbers so we round (4.6... → 5), making our new coordinates
+                    <math>
+                        <mrow>
+                            <ms>(</ms><mn>3</mn><mo>,</mo><mn>5</mn><ms>)</ms>
+                        </mrow>
+                    </math>. We just continue this method until our current x position reaches the x value of <math><mrow><msub><mi>p</mi><mn>2</mn></msub></mrow></math>.
+                </p>
+                <p>
+                    The code looks something like:
+                </p>
+<pre class="code-block">
+<code>
+function drawLine():
+    p1 = (2, 3)
+    p2 = (5, 8)
+    x = p1.x, y = p1.y
+    m = (p2.y - p1.y)/(p2.x - p1.x)
+    
+    while (x <= p2.x):
+        colorPixel(x, round(y)) // pretend this is a function that colors the current pixel
+        y += m
+        x++
+</code>
+</pre>
+                <p>
+                    Well that was pretty simple considering all of that build up lol.
+                </p>
+                <p>
+                    Now there are a few things to point out right now:
+                </p>
+                <ol>
+                    <li>
+                        This only works for lines going left to right. If we wanted to draw a line starting from <math><mrow><msub><mi>p</mi><mn>2</mn></msub></mrow></math>
+                        going to <math><mrow><msub><mi>p</mi><mn>1</mn></msub></mrow></math>, then the loop would not work.
+                    </li>
+                    <li>
+                        This will not work with super steep lines or lines that go straight up. If we try to run this code we will see skipping on steep lines
+                        and for straight up or down lines will not be drawn at all (due to loop).
+                    </li>
+                    <li>
+                        We are doing some floating point arithmetic here which doesn't translate super cleanly with discrete pixel coordinates
+                        and forces us to utilize a rounding function.
+                    </li>
+                </ol>
+                <p>
+                    Let's go one by one with this.
+                </p>
+                <h3>Swapping Lines</h3>
+                <p>
+                    Now if <code>p1.x</code> happens to be greater than <code>p2.x</code>, the for loop will just not run. We could create a second loop that occurs
+                    while <code>p1.x >= p2.x</code>, but that is just extra code, duplication, and complexity.
+                </p>
+                <p>
+                    A simpler solution is that if the first point is to the right of the second, we can just swap them so that way we can traverse left to
+                    right. In the end, swapping doesn't change anything since the line looks the same either way.
+                </p>
+<pre class="code-block">
+<code>
+function drawLine():
+    p1 = (2, 3)
+    p2 = (5, 8)
+    x = p1.x, y = p1.y
+    m = (p2.y - p1.y)/(p2.x - p1.x)
+
+    // Swap starting and end points when start is to the right of end point
+    if (p1.x > p2.x):
+        temp = p1
+        p1 = p2
+        p2 = temp
+    
+    while (x <= p2.x):
+        colorPixel(x, round(y)) // pretend this is a function that colors the current pixel
+        y += m
+        x++
+</code>
+</pre>
+                <p>
+                    Now it works both left to right and right to left lines which covers a bunch of directions. Let's now tackle the steep/straight up line problem.
+                </p>
+                <h3>Steeeeep Lines</h3>
+                <p>
+                    Now this is the one that stumped me for the longest time because I wasn't able to easily find a solution for this or derive one myself.
+                    Basically I was following the math and trying to derive the code myself, so this was my biggest blocker.
+                </p>
+                <p>
+                    Luckily I found the answer in the <a href="line-drawing.html#tiny-renderer-line-drawing">Tiny Renderer[1]</a> lecture/explanation. (I'm gonna get a little heavy on writing
+                    in the next this section).
+                </p>
+                <p>
+                    The author mentions how we can identify and draw steep lines using the slope. Basically, as stated prevously, the slope defines how many units vertically
+                    the line changes when we traverse the line by 1 unit. If the slope is greater than 0, then the y value will increase when x increases (and obviously decrease
+                    if the slope is less than 0).
+                </p>
+                <p>
+                    The y value will slowly increase if the slope value is small (like 0.5), causing a very gradual and slow increase in the height of the line.
+                    If the slope is large though (like 2), then y value increases in a large way which leads to steeper and steeper lines.
+                </p>
+                <p>
+                    If slope is equal to 1, then the y value increases at the same rate as the x value (1 unit to the right means 1 unit up). But if the slope is greater than 1, then
+                    we know that the height is increasing greater than we are moving horizontally (which is the same for lines straight up).
+                </p>
+                <p>
+                    We can use this fact to define that a line starts to become too steep when the slope is greater than 1.
+                </p>
+                <math class="math-block">
+                    <mtable>
+                        <mtr>
+                            <mtd>
+                                <mi>m</mi>
+                                <mo>=</mo>
+                                <mfrac>
+                                    <mrow><msub><mi>y</mi><mn>2</mn></msub><mo>-</mo><msub><mi>y</mi><mn>1</mn></msub></mrow>
+                                    <mrow><msub><mi>x</mi><mn>2</mn></msub><mo>-</mo><msub><mi>x</mi><mn>1</mn></msub></mrow>
+                                </mfrac>
+                            </mtd>
+                        </mtr>
+                        <mtr>
+                            <mtd>
+                                <mi>m</mi><mo>></mo>1
+                            </mtd>
+                        </mtr>
+                        <mtr>
+                            <mtd>
+                                <mfrac>
+                                    <mrow><msub><mi>y</mi><mn>2</mn></msub><mo>-</mo><msub><mi>y</mi><mn>1</mn></msub></mrow>
+                                    <mrow><msub><mi>x</mi><mn>2</mn></msub><mo>-</mo><msub><mi>x</mi><mn>1</mn></msub></mrow>
+                                </mfrac>
+                                <mo>></mo><mn>1</mn>
+                            </mtd>
+                        </mtr>
+                        <mtr>
+                            <mtd>
+                                <mo>(</mo>
+                                <mrow>
+                                    <msub><mi>x</mi><mn>2</mn></msub>
+                                    <mo>-</mo>
+                                    <msub><mi>x</mi><mn>1</mn></msub>
+                                </mrow>
+                                <mo>)</mo>
+                                <mfrac>
+                                    <mrow><msub><mi>y</mi><mn>2</mn></msub><mo>-</mo><msub><mi>y</mi><mn>1</mn></msub></mrow>
+                                    <mrow><msub><mi>x</mi><mn>2</mn></msub><mo>-</mo><msub><mi>x</mi><mn>1</mn></msub></mrow>
+                                </mfrac>
+                                <mo>></mo><mn>1</mn>
+                                <mo>(</mo>
+                                <mrow>
+                                    <msub><mi>x</mi><mn>2</mn></msub>
+                                    <mo>-</mo>
+                                    <msub><mi>x</mi><mn>1</mn></msub>
+                                </mrow>
+                                <mo>)</mo>
+                            </mtd>
+                        </mtr>
+                        <mtr>
+                            <mtd>
+                                <mrow><msub><mi>y</mi><mn>2</mn></msub><mo>-</mo><msub><mi>y</mi><mn>1</mn></msub></mrow>
+                                <mo>></mo>
+                                <mrow><msub><mi>x</mi><mn>2</mn></msub><mo>-</mo><msub><mi>x</mi><mn>1</mn></msub></mrow>            
+                            </mtd>
+                        </mtr>
+                    </mtable>
+                </math>
+                <p>
+                    Now this gives us our condition for if a line is steep. Now we could just check in the code if the slope is greater than 1
+                    (<code>slope > 1</code>), but utilizing this approach will give us a head start in using integer arithmetic and not dealing with floating point numbers.
+                </p>
+                <p>
+                    One thing to note is this condition works if
+                    <math>
+                        <ms>(</ms>
+                            <msub><mi>x</mi><mn>2</mn></msub>
+                            <mo>,</mo>
+                            <msub><mi>y</mi><mn>2</mn></msub>
+                        <ms>)</ms>
+                        <mo>></mo>
+                        <ms>(</ms>
+                            <msub><mi>x</mi><mn>1</mn></msub>
+                            <mo>,</mo>
+                            <msub><mi>y</mi><mn>1</mn></msub>
+                        <ms>)</ms>
+                    </math>
+                    , aka if the line is left-to-right. In the code we can either swap the points first then perform calculate the condition, or we can calculate the condition
+                    but using the absolute values instead. Either one works, but I will show the absolute value verion just cuzzzzzzzz.
+                </p>
+                <p>
+                    Now that we know how to check when the slope is too steep, what do we do to accomodate for this and properly draw those lines.
+                </p>
+                <p>
+                    We can utilize <strong>transposing</strong> to achieve our goal. Basically we will treat the up and down directions as left and right, which will allow the algorithm
+                    to traverse a straight up or steep line as if it was just a normal line going left-to-right.
+                </p>
+                <p>
+                    Therefore we can swap the x and y coordinates when the line is steep (transposing), and then traverse the line with the swapped coordinates. We will have to make sure that we
+                    swap the coordinates before we draw in a specific pixel (transposing back to regular coordinates).
+                </p>
+<pre class="code-block">
+<code>
+function drawLine():
+    p1 = (2, 3)
+    p2 = (5, 8)
+    x = p1.x, y = p1.y
+    m = (p2.y - p1.y)/(p2.x - p1.x)
+
+    isSteep = abs(p2.y - p1.y) > abs(p2.x - p1.x)
+
+    // Transpose x and y coordinates of points if line is steep
+    if (isSteep) {
+        tempP2X = p2.x
+        tempP1X = p1.x
+
+        p2.x = p2.y
+        p1.x = p1.y
+
+        p2.y = tempP2X
+        p1.y = tempP1X
+    }
+
+    // Swap starting and end points when start is to the right of end point
+    if (p1.x > p2.x):
+        temp = p1
+        p1 = p2
+        p2 = temp
+    
+    while (x <= p2.x):
+        if (isSteep):
+            // Instead of performing operations to transpose the coordinate back,
+            // We can just color the pixel with the coordinates swapped (in place transpose)
+            colorPixel(round(y), x)
+        else:
+            colorPixel(x, round(y)) // pretend this is a function that colors the current pixel
+        y += m
+        x++
+</code>
+</pre>
+                <p>Awesome, that's that part out of the way. With that solved and handled for, we can move onto our last concern.</p>
+                <h3>Utilizing Integer Arithmetic</h3>
+                <p>
+                    Calculating with floating point numbers isn't exactly the biggest performance overhead that it used to be on older systems
+                    <a href="line-drawing.html#tiny-renderer-line-drawing">[1]</a>. Although, you can be sure of this by performing peformance tests yourself.
+                </p>
+                <p>
+                    One reason that switching to integer arithmetic is nicer is because it allows for more direct and discrete calculation (floating point arithmetic 💀).
+                    It also works nicely with pixels since they are discrete intervals and we can predict values during calculation more concretely.
+                </p>
+                <p>
+                    There are two floating point numbers here: y and m. Changing these variables to integers will affect how we perform our y value updates, so it is not
+                    as simple as just changing data types.
+                </p>
+                <p>
+                    We can start by looking at how we are evaluating whether to increase y or not. At the moment it is very simple, just add the slope to y and round.
+                </p>
+                <p>
+                    Let's look into that further. When we round, y is either increasing or it is not by the nature of rounding. For example, if y is 0.2 and the slope is 0.4 and we add
+                    the slope to y, then y becomes 0.6 which rounds up to 1. But if the slope was 0.2, then the new y would be 0.4 which would round down to 0.
+                </p>
+                <p>
+                    In the second example where we round down, the y value does not change until the next step where we add 0.2 again which brings y to 0.6 which ends up rounding up.
+                    Therefore we only increase the y value if the sum of y and the slope exceeds a certain threshold which we can define as the halfway value of the pixel. So if
+                    <math><mrow><msub><mi>y</mi><ms>pixel</ms></msub></mrow></math> is the current pixel and
+                    <math><mrow><msub><mi>y</mi><ms>pixel</ms></msub><mo>+</mo><mn>1</mn></mrow></math> is the next pixel up, then the threshold is
+                    <math><mrow><msub><mi>y</mi><ms>pixel</ms></msub><mo>+</mo><mn>0.5</mn></mrow></math>.
+                </p>
+                <p>
+                    Now the problem is that y is not a whole number or fixed to a pixel coordinate. Although, we can reinterpret it as the y pixel coordinate and a floating point value added to it.
+                    From our previous example, if
+                    <math><mrow><mi>y</mi><mo>=</mo><mn>0.2</mn></mrow></math> then it is really
+                    <math><mrow><mi>y</mi><mo>=</mo><mn>0</mn><mo>+</mo><mn>0.2</mn></mrow></math> because the pixel we are on is at
+                    <math><mrow><msub><mi>y</mi><ms>pixel</ms></msub><mo>=</mo><mn>0</mn></mrow></math>. We can call this extra floating point value the <strong>error</strong> (e for short).
+                    Here is how we can expand our current condition for increasing y with our new definitions:
+                </p>
+                <math class="math-block">
+                    <mtable>
+                        <mtr>
+                            <mtd>
+                                <ms>round</ms><mo>(</mo><mi>y</mi><mo>+</mo><mi>m</mi><mo>)</mo>
+                            </mtd>
+                        </mtr>
+                        <mtr>
+                            <mtd>
+                                <mi>y</mi><mo>+</mo><mi>m</mi><mo>></mo><msub><mi>y</mi><ms>pixel</ms></msub><mo>+</mo><mn>0.5</mn>
+                            </mtd>
+                        </mtr>
+                        <mtr>
+                            <mtd>
+                                <msub><mi>y</mi><ms>pixel</ms></msub><mo>+</mo><mi>e</mi><mo>+</mo><mi>m</mi>
+                                <mo>></mo>
+                                <msub><mi>y</mi><ms>pixel</ms></msub><mo>+</mo><mn>0.5</mn>
+                            </mtd>
+                        </mtr>
+                        <mtr>
+                            <mtd>
+                                <mi>e</mi><mo>+</mo><mi>m</mi><mo>></mo></msub><mn>0.5</mn>
+                            </mtd>
+                        </mtr>
+                    </mtable>
+                </math>
+                <p>
+                    At the end of the expansion, we were able to remove the <math><mrow><msub><mi>y</mi><ms>pixel</ms></msub></mrow></math> variable from the condition as in reality this is what we want to be checking.
+                    In english, this is checking if the error we are accumulating with the slope surpasses the midpoint of the pixel, in which case we can increase y by 1. In the code we will have to keep track of the
+                    error as a separate variable and use that for accumulation instead of y. This is what it looks like:
+                </p>
+<pre class="code-block">
+<code>
+function drawLine():
+    p1 = (2, 3)
+    p2 = (5, 8)
+    x = p1.x, y = p1.y
+
+    // y becomes an integer and error takes its place as the floating point number
+    error = 0.0
+    m = (p2.y - p1.y)/(p2.x - p1.x)
+
+    isSteep = abs(p2.y - p1.y) > abs(p2.x - p1.x)
+
+    // Transpose x and y coordinates of points if line is steep
+    if (isSteep) {
+        tempP2X = p2.x
+        tempP1X = p1.x
+
+        p2.x = p2.y
+        p1.x = p1.y
+
+        p2.y = tempP2X
+        p1.y = tempP1X
+    }
+
+    // Swap starting and end points when start is to the right of end point
+    if (p1.x > p2.x):
+        temp = p1
+        p1 = p2
+        p2 = temp
+    
+    while (x <= p2.x):
+        if (isSteep):
+            // Instead of performing operations to transpose the coordinate back,
+            // We can just color the pixel with the coordinates swapped (in place transpose)
+            colorPixel(y, x)
+        else:
+            colorPixel(x, y) // pretend this is a function that colors the current pixel
+        
+        // Error accumulates by slope at every step
+        // If it surpasses 0.5, we increase the y value and decrease error to compensate
+        if (error + m > 0.5):
+            // We do a conditional check here to make sure we increase or decrease y
+            // depending on if the line is going up or down
+            y = (p2.y > p1.y) ? 1 : -1
+            error -= 1
+        error = error + m
+        x++
+</code>
+</pre>
+                <p>
+                    A few things to note. Firstly, y is now an integer since we are accumulating error as a floating point number. Secondly, we are accumulating error like we have before but
+                    when it surpasses the threshold (0.5), then we subtract by 1. This is because we just increased the 
+                    <math><mrow><msub><mi>y</mi><ms>pixel</ms></msub></mrow></math> value by 1 so we need to renormalize to stay between 
+                    <math><mrow><msub><mi>y</mi><ms>pixel</ms></msub></mrow></math> and <math><mrow><msub><mi>y</mi><ms>pixel</ms></msub><mo>+</mo><mn>1</mn></mrow></math>.
+                    The last note, is that we can refactor the code a little bit. Specifically the <code>error + m</code> part to be more like this:
+                </p>
+<pre class="code-block">
+<code>
+    ...
+        else:
+            colorPixel(x, y) // pretend this is a function that colors the current pixel
+        
+        // Accumulate error and compare using updated value
+        error += m
+        if (error > 0.5):
+            y = (p2.y > p1.y) ? 1 : -1
+            error -= 1
+        x++
+</code>
+</pre>
+                <p>
+                    Anywaysssss. We are still here dealing with floating point values because of the slope and how we accumulate the error variable.
+                </p>
+                <p>
+                    We can actually further break this apart and turn it into integer form using some simple arithmetic and the definition of slope:
+                </p>
+                <math class="math-block">
+                    <mtable>
+                        <mtr>
+                            <mtd>
+                                <mi>e</mi><mo>+</mo><mi>m</mi><mo>></mo></msub><mn>0.5</mn>
+                            </mtd>
+                        </mtr>
+                        <mtr>
+                            <mtd>
+                                <mi>e</mi><mo>+</mo>
+                                <mfrac>
+                                    <mrow><ms>∆</ms><mi>y</mi></mrow>
+                                    <mrow><ms>∆</ms><mi>x</mi></mrow>
+                                </mfrac>
+                                <mo>></mo>
+                                <mfrac><mn>1</mn><mn>2</mn></mfrac>
+                            </mtd>
+                        </mtr>
+                        <mtr>
+                            <mtd>
+                                <mo>(</mo><mn>2</mn><ms>∆</ms><mi>x</mi><mo>)</mo>
+                                <mo>(</mo><mi>e</mi><mo>+</mo>
+                                <mfrac>
+                                    <mrow><ms>∆</ms><mi>y</mi></mrow>
+                                    <mrow><ms>∆</ms><mi>x</mi></mrow>
+                                </mfrac>
+                                <mo>)</mo>
+                                <mo>></mo>
+                                <mfrac><mn>1</mn><mn>2</mn></mfrac>
+                                <mo>(</mo><mn>2</mn><ms>∆</ms><mi>x</mi><mo>)</mo>
+                            </mtd>
+                        </mtr>
+                        <mtr>
+                            <mtd>
+                                <mn>2</mn><mi>e</mi>
+                                <ms>∆</ms><mi>x</mi>
+                                <mo>+</mo>
+                                <mn>2</mn><ms>∆</ms><mi>y</mi>
+                                <mo>></mo><ms>∆</ms><mi>x</mi>
+                            </mtd>
+                        </mtr>
+                        <mtr>
+                            <mtd>
+                                <mn>2</mn><mo>(</mo><mi>e</mi>
+                                <ms>∆</ms><mi>x</mi>
+                                <mo>+</mo>
+                                <ms>∆</ms><mi>y</mi><mo>)</mo>
+                                <mo>></mo><ms>∆</ms><mi>x</mi>
+                            </mtd>
+                        </mtr>
+                    </mtable>
+                </math>
+                <p>
+                    There we go. Now we have it broken down into a nicer integer form which we can implement into code pretty easily.
+                    One thing to note is that in place of the slope term (<math><mi>m</mi></math>), we introduce two new terms:
+                    <math><mrow><ms>∆</ms><mi>x</mi></mrow></math> and <math><mrow><ms>∆</ms><mi>y</mi></mrow></math>. So we will have
+                    to initialize these in the code, which is pretty simple (
+                        <math>
+                            <mrow>
+                                <ms>∆</ms><mi>x</mi><mo>=</mo><msub><mi>x</mi><mn>2</mn></msub><mo>-</mo><msub><mi>x</mi><mn>1</mn></msub>
+                            </mrow>
+                        </math>
+                    , etc.). Now let's rearrange the way we update our terms:
+                </p>
+                <math class="math-block">
+                    <mtable>
+                        <mtr>
+                            <mtd>
+                                <mi>e</mi><mo>=</mo><mi>e</mi><mo>+</mo></msub><mi>m</mi>
+                            </mtd>
+                        </mtr>
+                        <mtr>
+                            <mtd>
+                                <mi>e</mi><mo>=</mo><mi>e</mi><mo>+</mo>
+                                <mfrac>
+                                    <mrow><ms>∆</ms><mi>y</mi></mrow>
+                                    <mrow><ms>∆</ms><mi>x</mi></mrow>
+                                </mfrac>
+                            </mtd>
+                        </mtr>
+                        <mtr>
+                            <mtd>
+                                <mo>(</mo><ms>∆</ms><mi>x</mi><mo>)</mo>
+                                <mi>e</mi><mo>=</mo>
+                                <mo>(</mo><mi>e</mi><mo>+</mo>
+                                <mfrac>
+                                    <mrow><ms>∆</ms><mi>y</mi></mrow>
+                                    <mrow><ms>∆</ms><mi>x</mi></mrow>
+                                </mfrac>
+                                <mo>)</mo>
+                                <mo>(</mo><ms>∆</ms><mi>x</mi><mo>)</mo>
+                            </mtd>
+                        </mtr>
+                        <mtr>
+                            <mtd>
+                                <mi>e</mi>
+                                <ms>∆</ms><mi>x</mi>
+                                <mo>=</mo>
+                                <mi>e</mi>
+                                <ms>∆</ms><mi>x</mi>
+                                <mo>+</mo>
+                                <ms>∆</ms><mi>y</mi>
+                            </mtd>
+                        </mtr>
+                    </mtable>
+                </math>
+                <p>
+                    Now let's do the updating when we re-normalize the error term (i.e. <code>error -= 1</code>):
+                </p>
+                <math class="math-block">
+                    <mtable>
+                        <mtr>
+                            <mtd>
+                                <mi>e</mi><mo>=</mo><mi>e</mi><mo>-</mo></msub><mn>1</mn>
+                            </mtd>
+                        </mtr>
+                        <mtr>
+                            <mtd>
+                                <mo>(</mo><ms>∆</ms><mi>x</mi><mo>)</mo>
+                                <mi>e</mi><mo>=</mo>
+                                <mo>(</mo><mi>e</mi><mo>-</mo><mn>1</mn>
+                                <mo>)</mo>
+                                <mo>(</mo><ms>∆</ms><mi>x</mi><mo>)</mo>
+                            </mtd>
+                        </mtr>
+                        <mtr>
+                            <mtd>
+                                <mi>e</mi>
+                                <ms>∆</ms><mi>x</mi>
+                                <mo>=</mo>
+                                <mi>e</mi>
+                                <ms>∆</ms><mi>x</mi>
+                                <mo>-</mo>
+                                <ms>∆</ms><mi>x</mi>
+                            </mtd>
+                        </mtr>
+                    </mtable>
+                </math>
+                <p>
+                    Perfect! Basically we are multiplying both sides by our <math><ms>∆</ms><mi>x</mi></math> term to align with the previous updating method.
+                    As you can tell we are bringing the <math><ms>∆</ms><mi>x</mi></math> and <math><ms>∆</ms><mi>y</mi></math> into the way we update terms as well.
+                    Therefore, we can reuse the previous <code>changeX</code> and <code>changeY</code> as well. Here is the code:
+                </p>
+<pre class="code-block">
+<code>
+function drawLine():
+    p1 = (2, 3)
+    p2 = (5, 8)
+    x = p1.x, y = p1.y
+
+    // We evaluate error as an integer now
+    error = 0
+    // Split m into changeX and changeY
+    changeX = abs(p2.x - p1.x)
+    changeY = abs(p2.y - p1.y)
+
+    isSteep = abs(p2.y - p1.y) > abs(p2.x - p1.x)
+
+    // Transpose x and y coordinates of points if line is steep
+    if (isSteep) {
+        tempP2X = p2.x
+        tempP1X = p1.x
+
+        p2.x = p2.y
+        p1.x = p1.y
+
+        p2.y = tempP2X
+        p1.y = tempP1X
+    }
+
+    // Swap starting and end points when start is to the right of end point
+    if (p1.x > p2.x):
+        temp = p1
+        p1 = p2
+        p2 = temp
+    
+    while (x <= p2.x):
+        if (isSteep):
+            // Instead of performing operations to transpose the coordinate back,
+            // We can just color the pixel with the coordinates swapped (in place transpose)
+            colorPixel(y, x)
+        else:
+            colorPixel(x, y) // pretend this is a function that colors the current pixel
+        
+        // Accumulate error and compare using updated value
+        error += changeY
+        if (2 * e > changeX):
+            y = (p2.y > p1.y) ? 1 : -1
+            error -= changeX
+        x++
+</code>
+</pre>
+                <p>
+                    In the code, you can notice that we only keep track of <code>error</code> but do not multiply it with <code>changeX</code> like how we derived in the math.
+                    This is because we are starting the error term at 0 (zeroes out the <code>changeX</code> term) and only increase by <code>changeY</code>.
+                    Thankfully this helps simplify the code without needing to multiply or include more terms.
+                </p>
+                <p>
+                    Anyways, that is it. We have the final algorithm that handles all angles of lines and properly renders them in a rasterized grid. I found this exercise very
+                    fun and helped me dig my hands deep into the math and the way lines are drawn. I think this exercise gave me a nice fundamental understanding of graphics and
+                    the kinds of tricks used to draw things to the screen.
+                </p>
+                <p>
+                    Anyways, I'm providing my completed and committed code below written in C and stuff.
+                </p>
+<pre class="code-block">
+    <code>
+// Draws a line by rasterizing the continuous line segment into discrete characters.
+// At the moment, it only produces a point at each cell (depending on the implementation of drawPoint())
+void drawLine(Vector2* start, Vector2* end, Canvas* canvas) {
+    int startX = (int) start->x;
+    int startY = (int) start->y;
+
+    int endX = (int) end->x;
+    int endY = (int) end->y;
+
+    // Check if the start or end are out of bounds
+    if ((startX < 0 || startY < 0)
+        || (startX > canvas->WIDTH || startY > canvas->HEIGHT)) {
+        printf("Starting point: { %f, %f } is out of bounds of canvas\n", start->x, start->y);
+        exit(1);
+    }
+
+    if ((endX < 0 || endY < 0)
+        || (endX > canvas->WIDTH || endY > canvas->HEIGHT)) {
+        printf("Ending point: { %f, %f } is out of bounds of canvas\n", end->x, end->y);
+        exit(1);
+    }
+
+    int changeX = abs(startX-endX);
+    int changeY = abs(startY-endY);
+
+    int isSteep = changeX < changeY;
+    if (isSteep) {
+        // Swap X and Y variables to transpose line drawing
+        int tempX = startX;
+        int tempY = endX;
+
+        startX = startY;
+        startY = tempX;
+
+        endX = endY;
+        endY = tempY;
+
+        tempX = changeX;
+        changeY = tempX;
+        changeX = changeY;
+    }
+
+    // If line goes right to left, swap coordinates
+    if (startX > endX) {
+        int temp = startX;
+        startX = endX;
+        endX = temp;
+
+        temp = startY;
+        startY = endY;
+        endY = temp;
+    }
+
+    int x = startX;
+    int y = startY;
+
+    int errorTerm = 0;
+
+    while (x <= endX) {
+        if (isSteep) {
+            drawPoint(y, x, canvas);
+        } else {
+            drawPoint(x, y, canvas);
+        }
+
+        errorTerm += changeY;
+        if (2 * errorTerm > changeX) {
+            y += endY > startY ? 1 : -1; // accounting for y flip
+            errorTerm -= changeX;
+        }
+        x++;
+    }
+}
+    </code>
+</pre>
+                <p><strong>TODO: finish, add pictures</strong></p>
+                <h2>Resources</h2>
+                <ul>
+                    <li id="tiny-renderer-line-drawing">
+                        [1]. <a href="https://haqr.eu/tinyrenderer/bresenham/">Tiny Renderer (explanation of line drawing)</a>
+                    </li>
+                    <li id="university-of-helsinki">
+                        [2]. <a href="https://www.cs.helsinki.fi/group/goa/mallinnus/lines/bresenh.html">University of Helsinki lecture on line drawing</a>
+                    </li>
+                    <li id="mit-eecs">
+                        [3]. <a href="https://groups.csail.mit.edu/graphics/classes/6.837/F02/lectures/6.837-7_Line.pdf">MIT EECS Lecture Slides  about line drawing</a>
+                    </li>
+                </ul>
+            </section>
+            <div class="special-marker">
+                //;
+            </div>
+        </main>
+        <footer>
+            <!-- TODO: possibly update this to be like how nav bar is structured... (with li and such) -->
+           <div class="footer-items momo-trust-display-regular">
+            <a class="footer-links">
+                LinkedIn
+            </a>
+            |
+            <a href="https://github.com/StuffGames/" class="footer-links">
+                GitHub
+            </a>
+            |
+            <a class="footer-links">
+                etc.
+            </a>
+           </div>
+        </footer>
+    </body>
+</html>
